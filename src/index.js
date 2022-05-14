@@ -59,6 +59,7 @@ async function renderImages() {
 
         if (amountImage === 0) {
             Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+            refs.btn.classList.add('is-hidden');
             return
         }
 
