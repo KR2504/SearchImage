@@ -51,6 +51,7 @@ function onSubmitForm(e) {
 
 async function renderImages() {
     try {
+        refs.btn.disabled = true;
         refs.btn.classList.remove('is-hidden');
         const imageData = await fetchPixabay.fetchImages();
         const image = imageData.hits;
@@ -64,6 +65,7 @@ async function renderImages() {
         appendImagesMarkup(image);
         lightbox.refresh();
         fetchPixabay.incrementPage();
+        refs.btn.disabled = false;
 
         return imageData;
     } catch (error) {
