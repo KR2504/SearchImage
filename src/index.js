@@ -76,7 +76,7 @@ async function renderImages() {
 
 function onLoadMore() {
     renderImages().then(image => {
-        if (fetchPixabay.page > (Number(image.totalHits) / 40)) {
+        if (fetchPixabay.page > Math.ceil(Number(image.totalHits) / 40)) {
             Notify.warning("We're sorry, but you've reached the end of search results.")
             refs.btn.classList.add('is-hidden')
         }
