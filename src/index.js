@@ -12,11 +12,11 @@ const axios = require('axios');
 
 
 
-let infScroll = new InfiniteScroll('.container', {
+let infScroll = new InfiniteScroll('.gallery', {
     responseType: 'text',
     history: false,
 
-    path() { return axios.get(`https://pixabay.com/api/?$key=27293440-fcc002e8220f402dd59aadebd&q=cat&image_type=photo&orientation=horizontal&safesearch=true`).data },
+    path() { fetchPixabay.fetchImages() },
 })
 infScroll.loadNextPage();
 infScroll.on('load', (response, path) => {
