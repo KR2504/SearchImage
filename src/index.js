@@ -4,14 +4,28 @@ import "./css/styles.css";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+import InfiniteScroll from "infinite-scroll"
 
-// let infScroll = new InfiniteScroll('.container', {
-//     path: function() {
-//         let pageNumber = (fetchPixabay.incrementPage()) * 10;
-//         return `https://pixabay.com/api/${pageNumber}`;
-//     }
-// })
+
+const fetchPixabay = new PixabayApiServer();
 const axios = require('axios');
+
+
+
+let infScroll = new InfiniteScroll('.container', {
+    responseType: 'text',
+    history: false,
+
+    path() { return axios.get(`https://pixabay.com/api/?$key=27293440-fcc002e8220f402dd59aadebd&q=cat&image_type=photo&orientation=horizontal&safesearch=true`).data },
+})
+infScroll.loadNextPage();
+infScroll.on('load', (response, path) => {
+    console.log(JSON.parse(response));
+
+});
+
+
+
 
 const refs = {
     form: document.querySelector('.search-form'),
@@ -19,9 +33,6 @@ const refs = {
     input: document.querySelector('.search-input'),
     btn: document.querySelector('.load-more'),
 }
-
-const fetchPixabay = new PixabayApiServer();
-
 
 
 refs.form.addEventListener('submit', onSubmitForm);
@@ -83,8 +94,6 @@ function onLoadMore() {
     });
     lightbox.refresh()
 }
-
-
 
 function appendImagesMarkup(image) {
     refs.gallery.insertAdjacentHTML('beforeend', imagesTpl(image))
