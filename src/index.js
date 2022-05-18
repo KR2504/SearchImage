@@ -4,28 +4,38 @@ import "./css/styles.css";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
-import InfiniteScroll from "infinite-scroll"
+
 
 
 const fetchPixabay = new PixabayApiServer();
 const axios = require('axios');
 
 
+const infiniteObserver = new IntersectionObserver(([entry], observer) => {
 
-let infScroll = new InfiniteScroll('.gallery', {
-    responseType: 'text',
-    history: false,
+    if (entry.isIntersecting) {
+        observer.unobserve(entry.target)
 
-    path() { fetchPixabay.fetchImages() },
+        loadPosts();
+    }
+}, {
+    rootMargin: '0px',
+    threshold: 0.75,
 })
-infScroll.loadNextPage();
-infScroll.on('load', (response, path) => {
-    console.log(JSON.parse(response));
 
-});
+function loadPosts() {
+    renderImages().then((image) => {
+        const total = Number(image.totalHits);
+        Notify.success(`Hooray! We found ${total} images.`);
 
+        const lastImage = document.querySelector('.gallery').lastElementChild;
 
-
+        if (lastImage) {
+            infiniteObserver.observe(lastImage)
+        }
+        lightbox.refresh();
+    });
+}
 
 const refs = {
     form: document.querySelector('.search-form'),
@@ -50,12 +60,7 @@ function onSubmitForm(e) {
 
     clearImagesMarkup();
     fetchPixabay.resetPage();
-
-    renderImages().then(image => {
-        const total = Number(image.totalHits)
-        Notify.success(`Hooray! We found ${total} images.`)
-
-    })
+    loadPosts();
 
     e.target.reset();
 }
