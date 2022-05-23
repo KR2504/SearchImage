@@ -26,8 +26,8 @@ const infiniteObserver = new IntersectionObserver(([entry], observer) => {
 function loadPosts() {
     renderImages().then(image => {
 
-        const total = Number(image.totalHits);
-        Notify.success(`Hooray! We found ${total} images.`);
+        // const total = Number(image.totalHits);
+        // Notify.success(`Hooray! We found ${total} images.`);
 
         if (fetchPixabay.page > Math.ceil(Number(image.totalHits) / 40)) {
             infiniteObserver.disconnect()
@@ -66,11 +66,11 @@ function onSubmitForm(e) {
         return;
     }
 
-    // const amountImage = fetchPixabay.fetchImages();
-    // loadPosts().then(image => {
-    //         const total = Number(image.totalHits);
-    //         Notify.success(`Hooray! We found ${total} images.`);
-    //     })
+    const amountImage = fetchPixabay.fetchImages();
+    amountImage.then(image => {
+        const total = Number(image.totalHits);
+        Notify.success(`Hooray! We found ${total} images.`);
+    })
 
     // const total = Number(amountImage.totalHits);
 
